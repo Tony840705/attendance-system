@@ -1,0 +1,4 @@
+# 公司座標、距離設定(在這邊更改公司座標)
+COMPANY_LAT = 22.6273
+COMPANY_LNG = 120.3014
+ALLOW_DISTANCE_M = 100
