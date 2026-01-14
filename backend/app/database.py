@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data")
-DB_PATH = os.path.join(DATA_DIR, "attendance.db")
+DB_PATH = os.path.join(DATA_DIR, "Attendance.db")
 
 DATABASE_URL = f"sqlite:///{DB_PATH}"
 

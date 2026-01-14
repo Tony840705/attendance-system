@@ -2,20 +2,20 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models.attendance import Attendance
+from app.models.Attendance import Attendance
 
 router = APIRouter(prefix="/api/admin")
 
-@router.get("/attendance")
-def list_attendance(db: Session = Depends(get_db)):
+@router.get("/Attendance")
+def list_Attendance(db: Session = Depends(get_db)):
     records = db.query(Attendance).all()
     return records
 
 import csv
 from fastapi.responses import StreamingResponse
 
-@router.get("/attendance/export")
-def export_attendance(db: Session = Depends(get_db)):
+@router.get("/Attendance/export")
+def export_Attendance(db: Session = Depends(get_db)):
     def generate():
         yield "date,name,check_in,check_out,distance\n"
         for r in db.query(Attendance).all():
@@ -24,6 +24,6 @@ def export_attendance(db: Session = Depends(get_db)):
     return StreamingResponse(
         generate(),
         media_type="text/csv",
-        headers={"Content-Disposition": "attachment; filename=attendance.csv"}
+        headers={"Content-Disposition": "attachment; filename=Attendance.csv"}
     )
 

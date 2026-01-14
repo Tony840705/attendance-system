@@ -1,18 +1,14 @@
 # 打卡紀錄 Model
-from sqlalchemy import Column, Integer, Float, DateTime, String
-from datetime import datetime
-
+from sqlalchemy import Column, Integer, String, Date, DateTime
+from sqlalchemy.sql import func
 from backend.app.database import Base
 
 
 class Attendance(Base):
-    __tablename__ = "attendance"
+    __tablename__ = "Attendance"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, index=True)
-
-    clock_type = Column(String(10))  # IN / OUT
-    latitude = Column(Float)
-    longitude = Column(Float)
-
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    employee_id = Column(String, index=True)      # 員工編號
+    date = Column(Date, index=True)               # 打卡日期
+    clock_in_time = Column(DateTime, nullable=True)
+    clock_out_time = Column(DateTime, nullable=True)
