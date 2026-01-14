@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-sqlaLchemy
+SQLAlchemy
 psycopg2-binary
 pydantic
 alembic
@@ -29,3 +29,4 @@ email-validator
 python-multipart
 Pillow
 sqlmodel
+uvicorn[standard]
