@@ -1,6 +1,6 @@
+from fastapi import FastAPI
 from backend.app.database import Base, engine
 from backend.app.routers import clock
-from fastapi import FastAPI
 
 # 建立資料表
 Base.metadata.create_all(bind=engine)
