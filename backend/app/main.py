@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from data import BaseModel
 from datetime import datetime
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
