@@ -2,60 +2,69 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<title>打卡系統</title>
 </head>
+
 <body>
 <h2>打卡系統</h2>
 
 <input id="emp" placeholder="員工編號">
 
+<br><br>
+
 <button onclick="clock('in')">上班打卡</button>
 <button onclick="clock('out')">下班打卡</button>
 
-
-
 <script>
+const API_BASE = location.origin;
+
 function clock(type) {
+  const emp = document.getElementById("emp").value;
+  if (!emp) {
+    alert("請輸入員工編號");
+    return;
+  }
+
   if (!navigator.geolocation) {
-    alert("手機不支援定位");
+    alert("裝置不支援定位");
     return;
   }
 
   navigator.geolocation.getCurrentPosition(
-    position => {
+    (position) => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
       fetch(`${API_BASE}/api/clock`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          emp_id: emp,
           type: type,
           lat: lat,
           lng: lng
         })
       })
       .then(res => res.json())
-      .then(data => alert(data.message))
-      .catch(err => alert("送出失敗：" + err));
+      .then(data => {
+        alert(data.message);
+      })
+      .catch(err => {
+        alert("打卡失敗：" + err);
+      });
     },
-    error => {
-      alert("定位失敗，請允許定位或開啟 GPS");
+    (error) => {
+      alert("定位失敗，請允許定位權限");
       console.error(error);
     },
     {
       enableHighAccuracy: true,
       timeout: 10000
     }
-  )
-const API_BASE = location.origin;
-
-fetch(`${API_BASE}/api/clock`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    type: type,
-    lat: lat,
-    lng: lng
-  })
-})
+  );
 }
-
 </script>
+
 </body>
+</html>
