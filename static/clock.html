@@ -52,8 +52,8 @@ function clock(type) {
         alert(data.message);
       })
       .catch(err => {
-        console.error(err);
         alert("送出失敗");
+        console.error(err);
       });
     },
     (error) => {
