@@ -15,6 +15,9 @@
 <button onclick="clock('in')">上班打卡</button>
 <button onclick="clock('out')">下班打卡</button>
 
+<script src="https://maps.googleapis.com/maps/api/js?key=你的API_KEY"></script>
+<div id="map" style="width:100%; height:300px; margin-top:15px;"></div>
+
 <script>
 const API_BASE = location.origin;
 
@@ -35,6 +38,9 @@ function clock(type) {
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
 
+      /* ✅【④ 顯示地圖】 */
+      showMap(lat, lng);
+
       fetch(`${API_BASE}/api/clock`, {
         method: "POST",
         headers: {
@@ -43,26 +49,38 @@ function clock(type) {
         body: JSON.stringify({
           employee_id: emp,
           type: type,
-          lat: lat,
-          lng: lng
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
         })
       })
-      .then(res => res.json())
-      .then(data => {
-        alert(data.message || "打卡成功");
+      .then(async res => {
+        const text = await res.text();
+        alert("後端回傳：\n" + text);
       })
-      .catch(err => {
-        console.error(err);
-        alert("送出失敗：" + err);
-      });
+      .catch(err => alert("錯誤：" + err));
     },
-    error => {
-      console.error(error);
-      alert("定位失敗，請允許定位");
-    }
+    () => alert("定位失敗")
   );
 }
-</script>
 
+/* ✅【③ 地圖顯示函式】 */
+let map;
+let marker;
+
+function showMap(lat, lng) {
+  const pos = { lat: lat, lng: lng };
+
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: pos,
+    zoom: 16
+  });
+
+  marker = new google.maps.Marker({
+    position: pos,
+    map: map
+  });
+}
+</script>
+<div id="map" style="width:100%;height:300px;"></div>
 </body>
 </html>
