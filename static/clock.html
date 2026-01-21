@@ -22,40 +22,23 @@ const API_BASE = location.origin;
 function clock(type) {
   const emp = document.getElementById("emp").value;
 
-  if (!navigator.geolocation) {
-    alert("裝置不支援定位");
-    return;
-  }
-
   navigator.geolocation.getCurrentPosition(
-    position => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-
+    pos => {
       fetch(`${API_BASE}/api/clock`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
           employee_id: emp,
           type: type,
-          lat: lat,
-          lng: lng
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude
         })
       })
-      .then(res => res.json())
-      .then(data => {
-        alert(data.message);
-      })
-      .catch(err => {
-        alert("送出失敗");
-        console.error(err);
-      });
+      .then(r => r.json())
+      .then(d => alert(d.message))
+      .catch(() => alert("送出失敗"));
     },
-    err => {
-      alert("定位失敗，請開啟定位權限");
-      console.error(err);
-    },
-    { enableHighAccuracy: true, timeout: 10000 }
+    () => alert("定位失敗")
   );
 }
 </script>
