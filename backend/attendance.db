@@ -1,0 +1,14 @@
+CREATE TABLE attendance (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    employee_id TEXT,
+    work_date TEXT,
+    clock_in_time TEXT,
+    clock_out_time TEXT,
+    clock_in_lat REAL,
+    clock_in_lng REAL,
+    clock_out_lat REAL,
+    clock_out_lng REAL,
+    clock_in_map TEXT,
+    clock_out_map TEXT,
+    work_hours REAL
+);

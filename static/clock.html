@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<h2>打卡系統</h2>
+
+<input id="emp" placeholder="員工編號">
+
+<button onclick="clock('in')">上班打卡</button>
+<button onclick="clock('out')">下班打卡</button>
+
+
+
+<script>
+function clock(type) {
+  if (!navigator.geolocation) {
+    alert("手機不支援定位");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      fetch(`${API_BASE}/api/clock`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: type,
+          lat: lat,
+          lng: lng
+        })
+      })
+      .then(res => res.json())
+      .then(data => alert(data.message))
+      .catch(err => alert("送出失敗：" + err));
+    },
+    error => {
+      alert("定位失敗，請允許定位或開啟 GPS");
+      console.error(error);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000
+    }
+  )
+const API_BASE = location.origin;
+
+fetch(`${API_BASE}/api/clock`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    type: type,
+    lat: lat,
+    lng: lng
+  })
+})
+}
+
+</script>
+</body>

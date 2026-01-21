@@ -30,3 +30,4 @@ SQLAlchemy
 redis
 sqlmodel
 uvicorn[standard]
+sqlite3
