@@ -9,7 +9,7 @@
 
 <h2>打卡系統</h2>
 
-<input id="emp" placeholder="員工編號" value="001">
+<input id="emp" placeholder="員工編號">
 <br><br>
 
 <button onclick="clock('in')">上班打卡</button>
@@ -26,12 +26,12 @@ function clock(type) {
   }
 
   if (!navigator.geolocation) {
-    alert("此裝置不支援定位");
+    alert("瀏覽器不支援定位");
     return;
   }
 
   navigator.geolocation.getCurrentPosition(
-    (position) => {
+    position => {
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
 
@@ -49,20 +49,16 @@ function clock(type) {
       })
       .then(res => res.json())
       .then(data => {
-        alert(data.message);
+        alert(data.message || "打卡成功");
       })
       .catch(err => {
-        alert("送出失敗");
         console.error(err);
+        alert("送出失敗：" + err);
       });
     },
-    (error) => {
+    error => {
       console.error(error);
-      alert("定位失敗，請允許定位權限");
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 10000
+      alert("定位失敗，請允許定位");
     }
   );
 }

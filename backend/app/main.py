@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from data import BaseModel
 from datetime import datetime
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
@@ -18,6 +19,7 @@ class ClockRequest(BaseModel):
 
 def get_db():
     return sqlite3.connect(DB)
+
 
 @app.post("/api/clock")
 def clock(req: ClockRequest):
@@ -55,7 +57,10 @@ def clock(req: ClockRequest):
 
     conn.commit()
     conn.close()
-    return {"status": "ok"}
+
+    return {
+            "message": "打卡成功"
+        }
 
 @app.get("/api/attendance/{employee_id}")
 def get_attendance(employee_id: str):
