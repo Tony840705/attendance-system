@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models.Attendance import Attendance
+from app.models.attendance import Attendance
 
 router = APIRouter(prefix="/api/admin")
 
