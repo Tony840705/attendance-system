@@ -4,8 +4,11 @@ from datetime import datetime, date
 from app.database import get_db
 from app.models import Attendance
 from pydantic import BaseModel
+import sqlite3
 
-router = APIRouter(prefix="/api")
+router = APIRouter()
+
+DB_PATH = "attendance.db"
 
 class ClockRequest(BaseModel):
     employee_id: str
@@ -13,30 +16,34 @@ class ClockRequest(BaseModel):
     lat: float
     lng: float
 
-@router.post("/clock")
-def clock(req: ClockRequest, db: Session = Depends(get_db)):
-    today = date.today()
-
-    record = db.query(Attendance).filter(
-        Attendance.employee_id == req.employee_id,
-        Attendance.date == today
-    ).first()
-
+@router.post("/api/clock")
+def clock(req: ClockRequest):
     now = datetime.now()
+    today = now.date()
 
-    if not record:
-        record = Attendance(
-            employee_id=req.employee_id,
-            date=today,
-            clock_in_time=now
-        )
-        db.add(record)
-        db.commit()
-        return {"message": "上班打卡成功"}
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
 
-    if record.clock_out_time is None:
-        record.clock_out_time = now
-        db.commit()
-        return {"message": "下班打卡成功"}
+    if req.type == "in":
+        cursor.execute("""
+            INSERT INTO attendance (employee_id, date, clock_in_time)
+            VALUES (?, ?, ?)
+        """, (req.employee_id, today, now))
+        msg = "上班打卡成功"
 
-    return {"message": "今日已完成打卡"}
+    elif req.type == "out":
+        cursor.execute("""
+            UPDATE attendance
+            SET clock_out_time = ?
+            WHERE employee_id = ? AND date = ?
+        """, (now, req.employee_id, today))
+        msg = "下班打卡成功"
+
+    else:
+        conn.close()
+        return {"message": "未知打卡類型"}
+
+    conn.commit()
+    conn.close()
+
+    return {"message": msg}
